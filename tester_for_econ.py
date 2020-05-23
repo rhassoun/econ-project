@@ -18,7 +18,7 @@ class graph():
 	def demand_curve():
 		global demand_slope
 		x_demand = np.linspace(0,50,100)
-		demand_slope = -random.random()*random.randrange(0,10)
+		demand_slope = -random.random()*random.randrange(1,10)
 		global demand_b
 		demand_b = 75
 		y_demand = demand_slope*x_demand + demand_b
@@ -36,7 +36,7 @@ class graph():
 		plt.plot(np.linspace(0,50),supply_slope*np.linspace(0,50)+supply_b,'-r', label ='Supply')
 		plt.plot(np.linspace(0,50), demand_slope*np.linspace(0,50)+demand_b, 'b', label = 'Demand')
 		# checks that the equilibrium point is within the bounds of the chosen boundaries (50 X 100)
-		while graph.equilibrium_point(supply_slope, supply_b, demand_slope, demand_b)[0] >= 50 or graph.equilibrium_point(supply_slope, supply_b, demand_slope, demand_b)[1] >= 100:
+		while graph.equilibrium_point(supply_slope, supply_b, demand_slope, demand_b)[0] >= 50 or graph.equilibrium_point(supply_slope, supply_b, demand_slope, demand_b)[1] >= 100 or (-supply_slope/demand_slope*(40.005-demand_b)+40.005) < 0 or (graph.equilibrium_point(supply_slope, supply_b, demand_slope, demand_b)[1] > 35 and graph.equilibrium_point(supply_slope, supply_b, demand_slope, demand_b)[1] < 45) or (40.005-demand_b)/demand_slope > 50:
 		# if not, clears the plot and creates new lines by calling the supply and demand functions again
 			plt.clf()
 			plt.plot(graph.supply_curve()[0],graph.supply_curve()[1],'-r', label ='Supply')
@@ -116,6 +116,10 @@ class graph():
 			plt.plot(np.linspace(0,50), supply_slope*np.linspace(0,50)+supply_b, 'm', label = 'Long Run Supply Curve')
 			graph.current_equilibrium()
 			graph.surplus()
+		elif type_of_shift == 'complements':
+			demand_b += shift
+			plt.plot(np.linspace(0,50), demand_slope*np.linspace(0,50)+demand_b,'m', label = 'New Demand Curve')
+			graph.current_equilibrium()
 		return
 	def price_regulation(type_of_reg):
 		# generates a random price regulation
@@ -203,7 +207,13 @@ class firm():
 		graph.plotting()
 		plt.show()
 		firm.plotting()
-
+	def disequilibrium():
+		graph.apply_shift('complements', 15)
+		graph.plotting()
+		plt.show()
+		firm.long_run()
+		graph.plotting()
+		plt.show()
 graph.supply_curve()
 graph.demand_curve()
 
@@ -232,3 +242,5 @@ plt.show()
 firm.long_run()
 graph.plotting()
 plt.show()
+
+firm.disequilibrium()
